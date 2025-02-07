@@ -1,0 +1,29 @@
+name: flutter_native_ui
+description: "A Flutter package to make your app look fluent on all platforms."
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  fluent_ui: ^4.11.0
+  flutter:
+    sdk: flutter
+  macos_ui: ^2.1.9
+  yaru: ^7.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+platforms:
+  android:
+  ios:
+  web:
+  linux:
+  windows:
+  macos:
