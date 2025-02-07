@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
 
-FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.ios);
+FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.macos);
 
 void main() {
   flutterNative.init();
-  runApp(const MyApp());
+  if (flutterNative.platform == Environment.ios || flutterNative.platform == Environment.android) {
+    runApp(const MyApp());
+  } else {
+    runApp(const UnimplementedApp());
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -15,27 +19,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return NativeApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(title: "Hello"),
-      theme: NativeThemeData(primaryColor: Colors.amber, scaffoldBackgroundColor: Colors.amber),
-      darkTheme: NativeThemeData(primaryColor: Colors.red, scaffoldBackgroundColor: Colors.red),
+      home: TestPage(),
+      theme: NativeThemeData(primaryColor: Colors.amber, context: context),
+      darkTheme: NativeThemeData(primaryColor: Colors.red, context: context),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class UnimplementedApp extends StatelessWidget {
+  const UnimplementedApp({super.key});
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(child: NativeText("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}")),
+      ),
+    );
+  }
+}
+
+class TestPage extends StatefulWidget {
+  const TestPage({super.key});
+
+  @override
+  State<TestPage> createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage> {
+  @override
+  Widget build(BuildContext context) {
+    return NativeScaffold(
+      backgroundColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? Colors.black : Colors.white,
       body: Center(
-        child: Text("Hello, world!"),
+        child: NativeText("Running: TESTPAGE\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
       ),
     );
   }

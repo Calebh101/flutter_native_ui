@@ -160,7 +160,7 @@ class NativeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     bool darkMode = themeMode == ThemeMode.dark;
     if (themeMode == ThemeMode.system) {
-      darkMode = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+      darkMode = _getBrightness(context) == Brightness.dark;
     }
 
     if (Design.isMaterial()) {
@@ -181,10 +181,10 @@ class NativeApp extends StatelessWidget {
         title: title,
         onGenerateTitle: onGenerateTitle,
         color: color,
-        theme: theme?.build() as ThemeData?,
-        darkTheme: darkTheme?.build() as ThemeData?,
-        highContrastTheme: highContrastTheme?.build() as ThemeData?,
-        highContrastDarkTheme: highContrastDarkTheme?.build() as ThemeData?,
+        theme: (theme?.build() as ThemeData?) ?? ThemeData.fallback(),
+        darkTheme: (darkTheme?.build() as ThemeData?) ?? ThemeData.fallback(),
+        highContrastTheme: (highContrastTheme?.build() as ThemeData?) ?? ThemeData.fallback(),
+        highContrastDarkTheme: (highContrastDarkTheme?.build() as ThemeData?) ?? ThemeData.fallback(),
         themeAnimationDuration: themeAnimationDuration,
         themeAnimationCurve: themeAnimationCurve,
         locale: locale,
@@ -206,9 +206,6 @@ class NativeApp extends StatelessWidget {
         themeAnimationStyle: themeAnimationStyle,
       );
     } else if (Design.isCupertino()) {
-      print(darkMode);
-      print(darkTheme!.build());
-      print("$darkMode: ${darkMode ? darkTheme?.build() : theme?.build()}");
       return CupertinoApp(
         key: key,
         navigatorKey: navigatorKey,
@@ -224,7 +221,7 @@ class NativeApp extends StatelessWidget {
         title: title,
         onGenerateTitle: onGenerateTitle,
         color: color,
-        theme: darkMode ? darkTheme?.build() : theme?.build(),
+        theme: darkMode ? (darkTheme?.build()) : theme?.build(),
         locale: locale,
         localizationsDelegates: localizationsDelegates,
         localeListResolutionCallback: localeListResolutionCallback,
@@ -247,7 +244,12 @@ class NativeApp extends StatelessWidget {
   }
 }
 
+Brightness _getBrightness(BuildContext context) {
+  return MediaQuery.platformBrightnessOf(context);
+}
+
 class NativeThemeData {
+  final BuildContext context;
   final Iterable<Adaptation<Object>>? adaptations;
   final bool? applyElevationOverlayColor;
   final NoDefaultCupertinoThemeData? cupertinoOverrideTheme;
@@ -261,7 +263,7 @@ class NativeThemeData {
   final bool? useMaterial3;
   final VisualDensity? visualDensity;
   final ColorScheme? colorScheme;
-  final Brightness? brightness;
+  Brightness? brightness;
   final Color? colorSchemeSeed;
   final Color? canvasColor;
   final Color? cardColor;
@@ -277,7 +279,6 @@ class NativeThemeData {
   final Color? primaryColorDark;
   final Color? primaryColorLight;
   final MaterialColor? primarySwatch;
-  final Color? scaffoldBackgroundColor;
   final Color? secondaryHeaderColor;
   final Color? shadowColor;
   final Color? splashColor;
@@ -340,6 +341,7 @@ class NativeThemeData {
   final bool? applyThemeToAll;
 
   NativeThemeData({
+    required this.context,
     this.adaptations,
     this.applyElevationOverlayColor,
     this.cupertinoOverrideTheme,
@@ -369,7 +371,6 @@ class NativeThemeData {
     this.primaryColorDark,
     this.primaryColorLight,
     this.primarySwatch,
-    this.scaffoldBackgroundColor,
     this.secondaryHeaderColor,
     this.shadowColor,
     this.splashColor,
@@ -432,6 +433,7 @@ class NativeThemeData {
   });
 
   dynamic build() {
+    brightness ??= _getBrightness(context);
     if (Design.isMaterial()) {
       return ThemeData(
         adaptations: adaptations,
@@ -461,7 +463,6 @@ class NativeThemeData {
         primaryColorDark: primaryColorDark,
         primaryColorLight: primaryColorLight,
         primarySwatch: primarySwatch,
-        scaffoldBackgroundColor: scaffoldBackgroundColor,
         secondaryHeaderColor: secondaryHeaderColor,
         shadowColor: shadowColor,
         splashColor: splashColor,
@@ -534,7 +535,7 @@ class NativeThemeData {
 
   @override
   String toString() {
-    return "NativeThemeData(scaffoldBackgroundColor: $scaffoldBackgroundColor)";
+    return "NativeThemeData(platform: $platform)";
   }
 }
 
@@ -640,10 +641,72 @@ class _NativeScaffoldState extends State<NativeScaffold> {
     } else if (Design.isCupertino()) {
       return CupertinoPageScaffold(
         key: widget.key,
-        navigationBar: widget.bottomNavigationBar,
+        navigationBar: widget.bottomNavigationBar as ObstructingPreferredSizeWidget?,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset ?? true,
+        backgroundColor: widget.backgroundColor,
         child: widget.body,
       );
+    } else {
+      throw UnimplementedError();
     }
+  }
+}
+
+class NativeText extends StatelessWidget {
+  final String data;
+  final Key? key;
+  final TextStyle? style;
+  final StrutStyle? strutStyle;
+  final TextAlign? textAlign;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final TextOverflow? overflow;
+  final double? textScaleFactor;
+  final TextScaler? textScaler;
+  final int? maxLines;
+  final String? semanticsLabel;
+  final TextWidthBasis? textWidthBasis;
+  final TextHeightBehavior? textHeightBehavior;
+  final Color? selectionColor;
+  final String? fontFamily;
+
+  NativeText(this.data, {
+    this.key,
+    this.style,
+    this.strutStyle,
+    this.textAlign,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.overflow,
+    this.textScaleFactor,
+    this.textScaler,
+    this.maxLines,
+    this.semanticsLabel,
+    this.textWidthBasis,
+    this.textHeightBehavior,
+    this.selectionColor,
+    this.fontFamily,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle textStyle = style ?? TextStyle();
+    return Text(data, key: key, style: textStyle.copyWith(fontFamily: fontFamily ?? getFont()), strutStyle: strutStyle, textAlign: textAlign, textDirection: textDirection, locale: locale, softWrap: softWrap, overflow: overflow, textScaleFactor: textScaleFactor, textScaler: textScaler, maxLines: maxLines, semanticsLabel: semanticsLabel, textWidthBasis: textWidthBasis, textHeightBehavior: textHeightBehavior, selectionColor: selectionColor);
+  }
+}
+
+String getFont() {
+  if (Design.isMaterial()) {
+    return 'Roboto.bold';
+  } else if (Design.isCupertino() || Design.isMacOS()) {
+    return 'SFPro';
+  } else if (Design.isFluent()) {
+    return 'SegoeUI';
+  } else if (Design.isYaru()) {
+    return 'Ubuntu';
+  } else {
+    throw Exception('Unknown platform: ${Platform.operatingSystem}');
   }
 }

@@ -27,3 +27,31 @@ platforms:
   linux:
   windows:
   macos:
+
+fonts:
+  - family: Roboto
+    fonts:
+    - asset: assets/fonts/Roboto-Regular.ttf      # regular
+    - asset: assets/fonts/Roboto-Bold.ttf         # bold
+    - asset: assets/fonts/Roboto-Light.ttf        # light
+      weight: 700
+
+  - family: SegoeUI
+    fonts:
+    - asset: assets/fonts/segoeuithis.ttf         # regular
+    - asset: assets/fonts/segoeuithibd.ttf        # bold
+      weight: 700
+
+  - family: SFPro
+    fonts:
+    - asset: assets/fonts/SFPRODISPLAYMEDIUM.OTF  # regular
+    - asset: assets/fonts/SFPRODISPLAYBOLD.OTF    # bold
+    - asset: assets/fonts/SFPRODISPLAYREGULAR.OTF # light
+      weight: 700
+
+  - family: Ubuntu
+    fonts:
+    - asset: assets/fonts/Ubuntu-Regular.ttf      # regular
+    - asset: assets/fonts/Ubuntu-Bold.ttf         # bold
+    - asset: assets/fonts/Ubuntu-Light.ttf        # light
+      weight: 700
