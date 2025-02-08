@@ -28,11 +28,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cupertino_icons: ^1.0.8
+  fluent_ui: ^4.11.0
   flutter:
     sdk: flutter
 
   flutter_native_ui:
     path: ../
+  yaru: ^7.0.0
 
 dev_dependencies:
   flutter_test:
@@ -86,3 +89,27 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+fonts:
+  - family: Roboto
+    fonts:
+    - asset: assets/fonts/Roboto-Regular.ttf      # regular
+    - asset: assets/fonts/Roboto-Bold.ttf         # bold
+    - asset: assets/fonts/Roboto-Light.ttf        # light
+
+  - family: SegoeUI
+    fonts:
+    - asset: assets/fonts/segoeuithis.ttf         # regular
+    - asset: assets/fonts/segoeuithibd.ttf        # bold
+
+  - family: SFPro
+    fonts:
+    - asset: assets/fonts/SFPRODISPLAYMEDIUM.OTF  # regular
+    - asset: assets/fonts/SFPRODISPLAYBOLD.OTF    # bold
+    - asset: assets/fonts/SFPRODISPLAYREGULAR.OTF # light
+
+  - family: Ubuntu
+    fonts:
+    - asset: assets/fonts/Ubuntu-Regular.ttf      # regular
+    - asset: assets/fonts/Ubuntu-Bold.ttf         # bold
+    - asset: assets/fonts/Ubuntu-Light.ttf        # light

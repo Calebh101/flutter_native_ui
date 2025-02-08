@@ -1,4 +1,4 @@
-library flutter_native_ui;
+library base;
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -96,9 +96,9 @@ String getFont() {
   if (Design.isMaterial()) {
     return 'Roboto';
   } else if (Design.isCupertino() || Design.isMacOS()) {
-    return 'SF Pro';
+    return 'SFPro';
   } else if (Design.isFluent()) {
-    return 'Segoe UI';
+    return 'SegoeUI';
   } else if (Design.isYaru()) {
     return 'Ubuntu';
   } else {

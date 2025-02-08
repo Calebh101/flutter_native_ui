@@ -9,12 +9,12 @@ class VariableHandler {
 
   VariableHandler({
     required this.name,
-    this.enabled = true,
+    this.enabled = kDebugMode,
   });
 
   bool handle(String name, dynamic variable) {
     if (variable != null && enabled) {
-      warn("Argument \"$name\" cannot be used with ${this.name} with platform ${kIsWeb ? "web:native" : kIsWasm ? "web:wasm" : Platform.operatingSystem}.");
+      warn("Argument \"$name\" cannot be used with ${this.name} on platform ${kIsWeb ? "web:native" : kIsWasm ? "web:wasm" : Platform.operatingSystem}.");
       return false;
     } else {
       return true;
