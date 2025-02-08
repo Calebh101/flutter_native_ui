@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
+import 'package:flutter_native_ui/bases.dart';
+import 'package:flutter_native_ui/themes.dart';
 
 FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.macos);
 
-void main() {
-  flutterNative.init();
+Future<void> main() async {
+  await flutterNative.init();
   if (flutterNative.platform == Environment.ios || flutterNative.platform == Environment.android) {
     runApp(const MyApp());
   } else {
@@ -31,9 +33,19 @@ class UnimplementedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle style = TextStyle(fontFamily: "SFPro.bold");
+    Widget text = Text("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}", style: style);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Center(child: NativeText("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}")),
+        body: Center(
+          child: Column(
+            children: [
+              text,
+              Text("Font: ${style.fontFamily},${getFont()}")
+            ],
+          ),
+        ),
       ),
     );
   }
