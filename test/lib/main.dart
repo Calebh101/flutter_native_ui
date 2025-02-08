@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/_private/_api.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
-import 'package:flutter_native_ui/main.dart';
 import 'package:flutter_native_ui/themes.dart';
 import 'package:yaru/yaru.dart' as yaru;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 
-FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.macos);
+FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.windows);
 
 Future<void> main() async {
   await flutterNative.init();
