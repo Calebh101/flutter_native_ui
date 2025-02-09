@@ -17,9 +17,27 @@ enum Environment {android, ios, macos, windows, linux, web, fuchsia}
 DesignType _designType = DesignType.material;
 
 class FlutterNativeUI {
+  final DesignType androidDesign;
+  final DesignType iosDesign;
+  final DesignType macosDesign;
+  final DesignType windowsDesign;
+  final DesignType linuxDesign;
+  final DesignType webDesign;
+  final DesignType fuchsiaDesign;
+
   Environment? platform;
+  bool disableWarnings;
+
   FlutterNativeUI({
     this.platform,
+    this.disableWarnings = kDebugMode,
+    this.androidDesign = DesignType.material,
+    this.iosDesign = DesignType.cupertino,
+    this.macosDesign = DesignType.macos,
+    this.windowsDesign = DesignType.fluent,
+    this.linuxDesign = DesignType.yaru,
+    this.webDesign = DesignType.material,
+    this.fuchsiaDesign = DesignType.material,
   });
 
   Future<void> init() async {
@@ -43,20 +61,33 @@ class FlutterNativeUI {
       }
     }
 
-    if (platform == Environment.web || platform == Environment.android || platform == Environment.fuchsia) {
-      _designType = DesignType.material;
-    } else if (platform == Environment.ios) {
-      _designType = DesignType.cupertino;
-    } else if (platform == Environment.macos) {
-      _designType = DesignType.macos;
-    } else if (platform == Environment.windows) {
-      _designType = DesignType.fluent;
-    } else if (platform == Environment.linux) {
-      _designType = DesignType.yaru;
-    } else {
-      throw Exception("Invalid platform: $platform");
+    _designType = _getDesignType(platform!);
+
+    if (getPlatform() == "macos" && _designType == DesignType.macos) {
+      if (disableWarnings == false) {
+        warn("Attempting to run the \"$_designType\" design type on platform ${getPlatform()} is not officially supported and can cause issues.");
+      }
     }
-  }  
+
+    bool supportWeb = false;
+    if (getPlatform() == "fuchsia" || ((getPlatform() == "web:native" || getPlatform() == "web:wasm") && supportWeb == false)) {
+      if (disableWarnings == false) {
+        warn("Platform ${getPlatform()} is not officially supported.");
+      }
+    }
+  }
+
+  DesignType _getDesignType(Environment platform) {
+    switch (platform) {
+      case Environment.web: return webDesign;
+      case Environment.android: return androidDesign;
+      case Environment.ios: return iosDesign;
+      case Environment.macos: return macosDesign;
+      case Environment.windows: return windowsDesign;
+      case Environment.linux: return linuxDesign;
+      case Environment.fuchsia: return fuchsiaDesign;
+    }
+  }
 }
 
 class WindowHandler {
