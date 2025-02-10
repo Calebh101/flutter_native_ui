@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_native_ui/_private/_logger.dart';
+import 'package:flutter_native_ui/private/logger.dart';
 
+/// Private API for warning users if they're using variables unsupported by that platform's library.
 class VariableHandler {
   final String name;
   final bool enabled;

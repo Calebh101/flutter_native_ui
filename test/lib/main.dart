@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_ui/_private/_api.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
-import 'package:flutter_native_ui/themes.dart';
+import 'package:flutter_native_ui/private.dart';
 import 'package:yaru/yaru.dart' as yaru;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 
-FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.windows);
+FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.linux);
 
 Future<void> main() async {
   await flutterNative.init();
-  if (flutterNative.platform == Environment.ios || flutterNative.platform == Environment.android) {
+  if (flutterNative.platform != Environment.windows) {
     runApp(const MyApp());
   } else {
     runApp(const UnimplementedApp());
@@ -43,7 +42,7 @@ class UnimplementedApp extends StatelessWidget {
         body: Center(
           child: Column(
             children: [
-            NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus)),
+            NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 36),
             NativeText("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
             Text("Test font: ${style.fontFamily}", style: style),
             ],
@@ -64,13 +63,14 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
+    TextStyle style = TextStyle(fontFamily: "SFPro");
     return NativeScaffold(
-      backgroundColor: getBrightness(context) == Brightness.dark ? Colors.black : Colors.white,
       body: Center(
         child: Column(
           children: [
-            NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus)),
+            NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 72),
             NativeText("Running: TESTPAGE\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
+            Text("Test font: ${style.fontFamily}", style: style),
           ],
         ),
       ),

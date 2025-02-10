@@ -1,8 +1,13 @@
+library;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
-import 'package:flutter_native_ui/_private/_api.dart';
+import 'package:flutter_native_ui/private.dart';
 
+/// Allows you to create theme data based on the platform:
+/// 
+/// Android/
 class NativeThemeData {
   final BuildContext context;
   final Iterable<Adaptation<Object>>? adaptations;
@@ -189,7 +194,7 @@ class NativeThemeData {
 
   dynamic build() {
     brightness ??= getBrightness(context);
-    if (Design.isMaterial()) {
+    if (Design.isMaterialYaru()) {
       return ThemeData(
         adaptations: adaptations,
         applyElevationOverlayColor: applyElevationOverlayColor,
@@ -286,10 +291,5 @@ class NativeThemeData {
         applyThemeToAll: applyThemeToAll,
       );
     }
-  }
-
-  @override
-  String toString() {
-    return "NativeThemeData(platform: $platform)";
   }
 }
