@@ -45,7 +45,7 @@ class NativeIcon extends NativeStatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VariableHandler handler = VariableHandler(name: 'NativeIcon', enabled: !disableWarnings);
+    NativeHandler handler = NativeHandler(name: 'NativeIcon', enabled: !disableWarnings);
     if (Design.isMacOS()) {
       handler.handle('fill', fill);
       handler.handle('weight', weight);

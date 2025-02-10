@@ -1,3 +1,6 @@
+analyzer:
+  errors:
+    dead_code: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

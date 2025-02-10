@@ -25,7 +25,4 @@ abstract class NativeWidget<T extends Widget> {
 
   /// constructor
   const NativeWidget(this.type);
-
-  /// a transform() function comes with each Widget to transform Material Design Widgets into Native UI Widgets
-  Widget transform(BuildContext context, Widget input);
 }

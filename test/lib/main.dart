@@ -5,11 +5,11 @@ import 'package:flutter_native_ui/private.dart';
 import 'package:yaru/yaru.dart' as yaru;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 
-FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.linux);
+FlutterNativeUI flutterNative = FlutterNativeUI(platform: Environment.windows);
 
 Future<void> main() async {
   await flutterNative.init();
-  if (flutterNative.platform != Environment.windows) {
+  if (flutterNative.platform != Environment.macos) {
     runApp(const MyApp());
   } else {
     runApp(const UnimplementedApp());
@@ -42,9 +42,10 @@ class UnimplementedApp extends StatelessWidget {
         body: Center(
           child: Column(
             children: [
-            NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 36),
-            NativeText("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
-            Text("Test font: ${style.fontFamily}", style: style),
+              NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 36),
+              NativeText("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
+              fluent.Text("Test font: ${style.fontFamily}", style: style),
+              NativeCircularProgressIndicator(),
             ],
           ),
         ),
@@ -71,6 +72,7 @@ class _TestPageState extends State<TestPage> {
             NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 72),
             NativeText("Running: TESTPAGE\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
             Text("Test font: ${style.fontFamily}", style: style),
+            NativeCircularProgressIndicator(),
           ],
         ),
       ),

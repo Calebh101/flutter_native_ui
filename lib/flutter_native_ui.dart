@@ -4,6 +4,7 @@ export 'public/main/main.dart';
 export 'public/widgets/images.dart';
 export 'public/classes/themes.dart';
 export 'public/widgets/navigation.dart';
+export 'public/widgets/progressindicators.dart';
 
 // If you would like to have access to private APIs (should only be used for testing), then add this line to your Flutter code:
 // import 'flutter_native_ui/private.dart';

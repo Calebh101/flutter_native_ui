@@ -1,14 +1,15 @@
 library flutter_native_ui;
 import 'dart:io';
 
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/private.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
-import 'package:macos_ui/macos_ui.dart';
-import 'package:yaru/yaru.dart';
+import 'package:macos_ui/macos_ui.dart' as macos;
+import 'package:yaru/yaru.dart' as yaru;
 
 FlutterNativeUI? _currentInstance;
 
@@ -231,6 +232,11 @@ class Design {
   static bool isMaterialYaru() {
     return isMaterial() || isYaru();
   }
+
+  /// Gets the current Design type.
+  static DesignType get() {
+    return _getCurrentInstance()._designType;
+  }
 }
 
 /// Equivalent to MaterialApp, but this takes and sets up a new app Widget depending on the platform:
@@ -322,50 +328,6 @@ class NativeApp extends NativeStatelessWidget {
     this.themeAnimationStyle,
   });
 
-  @override
-  Widget transform(BuildContext context, Widget input) {
-    return NativeApp(
-      key: input.key,
-      themeMode: themeMode,
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      home: home,
-      routes: routes,
-      initialRoute: initialRoute,
-      onGenerateRoute: onGenerateRoute,
-      onGenerateInitialRoutes: onGenerateInitialRoutes,
-      onUnknownRoute: onUnknownRoute,
-      onNavigationNotification: onNavigationNotification,
-      navigatorObservers: navigatorObservers,
-      builder: builder,
-      title: title,
-      onGenerateTitle: onGenerateTitle,
-      color: color,
-      theme: theme,
-      darkTheme: darkTheme,
-      highContrastTheme: highContrastTheme,
-      highContrastDarkTheme: highContrastDarkTheme,
-      themeAnimationDuration: themeAnimationDuration,
-      themeAnimationCurve: themeAnimationCurve,
-      locale: locale,
-      localizationsDelegates: localizationsDelegates,
-      localeListResolutionCallback: localeListResolutionCallback,
-      localeResolutionCallback: localeResolutionCallback,
-      supportedLocales: supportedLocales,
-      debugShowMaterialGrid: debugShowMaterialGrid,
-      showPerformanceOverlay: showPerformanceOverlay,
-      checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-      checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-      showSemanticsDebugger: showSemanticsDebugger,
-      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      shortcuts: shortcuts,
-      actions: actions,
-      restorationScopeId: restorationScopeId,
-      scrollBehavior: scrollBehavior,
-      themeAnimationStyle: themeAnimationStyle,
-    );
-  }
-
   MaterialApp _buildMaterialApp({required ThemeData theme, required ThemeData darkTheme, required ThemeData highContrastTheme, required ThemeData highContrastDarkTheme}) {
     return MaterialApp(
       key: key,
@@ -413,7 +375,7 @@ class NativeApp extends NativeStatelessWidget {
   Widget build(BuildContext context) {
     bool darkMode = getBrightness(context) == Brightness.dark;
     bool highContrast = MediaQuery.of(context).highContrast;
-    VariableHandler handler = VariableHandler(name: "NativeApp", enabled: !disableWarnings);
+    NativeHandler handler = NativeHandler(name: "NativeApp", enabled: !disableWarnings);
 
     if (Design.isMaterial()) {
       ThemeData themeS = theme?.build() as ThemeData? ?? ThemeData.fallback();
@@ -467,7 +429,7 @@ class NativeApp extends NativeStatelessWidget {
       handler.handle('debugShowMaterialGrid', debugShowMaterialGrid);
       handler.handle('themeAnimationStyle', themeAnimationStyle);
 
-      return MacosApp(
+      return macos.MacosApp(
         key: key,
         themeMode: themeMode,
         navigatorKey: navigatorKey,
@@ -482,8 +444,8 @@ class NativeApp extends NativeStatelessWidget {
         title: title ?? '',
         onGenerateTitle: onGenerateTitle,
         color: color,
-        theme: (highContrast ? highContrastTheme?.build() : theme?.build()) ?? MacosThemeData.fallback(),
-        darkTheme: (highContrast ? highContrastDarkTheme?.build() : darkTheme?.build()) ?? MacosThemeData.fallback(),
+        theme: (highContrast ? highContrastTheme?.build() : theme?.build()) ?? macos.MacosThemeData.fallback(),
+        darkTheme: (highContrast ? highContrastDarkTheme?.build() : darkTheme?.build()) ?? macos.MacosThemeData.fallback(),
         locale: locale,
         localizationsDelegates: localizationsDelegates,
         localeListResolutionCallback: localeListResolutionCallback,
@@ -497,23 +459,58 @@ class NativeApp extends NativeStatelessWidget {
         shortcuts: shortcuts?.map((key, value) => MapEntry(key is SingleActivator ? LogicalKeySet(key.trigger) : null, value)).cast<LogicalKeySet, Intent>(),
         actions: actions,
         restorationScopeId: restorationScopeId,
-        scrollBehavior: scrollBehavior ?? const MacosScrollBehavior(),
+        scrollBehavior: scrollBehavior ?? const macos.MacosScrollBehavior(),
       );
     } else if (Design.isYaru()) {
-        return YaruTheme(
+        return yaru.YaruTheme(
           key: key,
-          builder: (context, yaru, child) {
-            ThemeData themeS = theme?.build() ?? yaru.theme;
-            ThemeData darkThemeS = darkTheme?.build() ?? yaru.darkTheme;
-            ThemeData highContrastThemeS = highContrastTheme?.build() ?? yaruHighContrastLight;
-            ThemeData highContrastDarkThemeS = highContrastDarkTheme?.build() ?? yaruHighContrastDark;
+          builder: (context, yaruS, child) {
+            ThemeData themeS = theme?.build() ?? yaruS.theme;
+            ThemeData darkThemeS = darkTheme?.build() ?? yaruS.darkTheme;
+            ThemeData highContrastThemeS = highContrastTheme?.build() ?? yaru.yaruHighContrastLight;
+            ThemeData highContrastDarkThemeS = highContrastDarkTheme?.build() ?? yaruS.yaru.yaruHighContrastDark;
             return _buildMaterialApp(theme: themeS, darkTheme: darkThemeS, highContrastTheme: highContrastThemeS, highContrastDarkTheme: highContrastDarkThemeS);
           },
         );
+    } else if (Design.isFluent()) {
+      return fluent.FluentApp(
+        key: key,
+        themeMode: themeMode,
+        navigatorKey: navigatorKey,
+        home: home,
+        routes: routes,
+        initialRoute: initialRoute,
+        onGenerateRoute: onGenerateRoute,
+        onGenerateInitialRoutes: onGenerateInitialRoutes,
+        onUnknownRoute: onUnknownRoute,
+        navigatorObservers: navigatorObservers,
+        builder: builder,
+        title: title ?? '',
+        onGenerateTitle: onGenerateTitle,
+        color: color,
+        //theme: theme,
+        //darkTheme: darkTheme,
+        locale: locale,
+        localizationsDelegates: localizationsDelegates,
+        localeListResolutionCallback: localeListResolutionCallback,
+        localeResolutionCallback: localeResolutionCallback,
+        supportedLocales: supportedLocales,
+        showPerformanceOverlay: showPerformanceOverlay,
+        showSemanticsDebugger: showSemanticsDebugger,
+        debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+        shortcuts: shortcuts,
+        actions: actions,
+        restorationScopeId: restorationScopeId,
+        scrollBehavior: scrollBehavior ?? fluent.FluentScrollBehavior(),
+      );
     } else {
-      throw Exception("Invalid design type");
+      return handler.overflow();
     }
   }
+}
+
+extension on yaru.YaruThemeData {
+  get yaru => null;
 }
 
 class NativeAppBar extends NativeStatefulWidget {
@@ -521,11 +518,6 @@ class NativeAppBar extends NativeStatefulWidget {
 
   @override
   State<NativeAppBar> createState() => _NativeAppBarState();
-
-  @override
-  Widget transform(BuildContext context, Widget input) {
-    return Placeholder();
-  }
 }
 
 class _NativeAppBarState extends State<NativeAppBar> {
@@ -540,11 +532,6 @@ class NativeFloatingActionButton extends NativeStatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
-  }
-
-  @override
-  Widget transform(BuildContext context, Widget input) {
     return Placeholder();
   }
 }
@@ -574,6 +561,7 @@ class NativeScaffold extends NativeStatefulWidget {
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
   final String? restorationId;
+  final TextDirection? textDirection;
 
   const NativeScaffold({
     super.key,
@@ -602,45 +590,17 @@ class NativeScaffold extends NativeStatefulWidget {
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
+    this.textDirection,
   });
 
   @override
   _NativeScaffoldState createState() => _NativeScaffoldState();
-
-  @override
-  Widget transform(BuildContext context, Widget input) {
-    return NativeScaffold(
-      appBar: appBar,
-      body: body,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      floatingActionButtonAnimator: floatingActionButtonAnimator,
-      persistentFooterButtons: persistentFooterButtons,
-      drawer: drawer,
-      onDrawerChanged: onDrawerChanged,
-      endDrawer: endDrawer,
-      onEndDrawerChanged: onEndDrawerChanged,
-      bottomNavigationBar: bottomNavigationBar,
-      bottomSheet: bottomSheet,
-      backgroundColor: backgroundColor,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      primary: primary,
-      drawerDragStartBehavior: drawerDragStartBehavior,
-      extendBody: extendBody,
-      extendBodyBehindAppBar: extendBodyBehindAppBar,
-      drawerScrimColor: drawerScrimColor,
-      drawerEdgeDragWidth: drawerEdgeDragWidth,
-      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-      endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
-      restorationId: restorationId,
-    );
-  }
 }
 
 class _NativeScaffoldState extends State<NativeScaffold> {
   @override
   Widget build(BuildContext context) {
-    VariableHandler handler = VariableHandler(name: 'NativeScaffold');
+    NativeHandler handler = NativeHandler(name: 'NativeScaffold');
     if (Design.isMaterialYaru()) {
       return Scaffold(
         key: widget.key,
@@ -696,8 +656,17 @@ class _NativeScaffoldState extends State<NativeScaffold> {
         backgroundColor: widget.backgroundColor,
         child: widget.body,
       );
+    } else if (Design.isFluent()) {
+      Widget data = fluent.NavigationPaneTheme(
+        data: fluent.NavigationPaneThemeData(),
+        child: widget.body,
+      );
+      return widget.textDirection != null ? Directionality(
+        textDirection: widget.textDirection!,
+        child: data,
+      ) : data;
     } else {
-      throw UnimplementedError();
+      return handler.overflow();
     }
   }
 }
@@ -744,11 +713,6 @@ class NativeText extends NativeStatelessWidget {
   Widget build(BuildContext context) {
     TextStyle textStyle = (style ?? TextStyle()).copyWith(fontFamily: fontFamily ?? getFont());
     return Text(data, key: key, style: textStyle, strutStyle: strutStyle, textAlign: textAlign, textDirection: textDirection, locale: locale, softWrap: softWrap, overflow: overflow, textScaler: textScaler, maxLines: maxLines, semanticsLabel: semanticsLabel, textWidthBasis: textWidthBasis, textHeightBehavior: textHeightBehavior, selectionColor: selectionColor);
-  }
-
-  @override
-  Widget transform(BuildContext context, Widget input) {
-    throw Exception("Type ${super.type} cannot be transformed (from type ${input.runtimeType})");
   }
 
   @override
