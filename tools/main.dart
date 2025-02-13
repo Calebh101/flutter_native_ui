@@ -1,5 +1,7 @@
 import 'dart:io';
 
+bool repeat = false;
+
 Future<void> main() async {
   print("Starting flutter_native_ui tools...");
   while (true) {
@@ -19,6 +21,11 @@ Future<void> main() async {
         exit(0);
       default:
         print("Invalid option");
+    }
+
+    if (repeat == false) {
+      print("Process complete");
+      break;
     }
   }
 }

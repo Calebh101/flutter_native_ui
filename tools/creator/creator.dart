@@ -3,6 +3,9 @@ import 'dart:io';
 
 void main({String className = "Text", int mode = 0}) {
   print("Loading Creator...");
+  stdout.write('Enter class name: ');
+  className = stdin.readLineSync() ?? className;
+
   while (mode == 0) {
     print("\nSelect a class type:");
     print("1. NativeStatefulWidget");
