@@ -1,9 +1,11 @@
 library;
 
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
 import 'package:flutter_native_ui/private.dart';
+import 'package:macos_ui/macos_ui.dart' as macos;
 
 /// Allows you to create theme data based on the platform:
 /// 
@@ -287,8 +289,40 @@ class NativeThemeData {
         brightness: brightness,
         primaryColor: primaryColor,
         primaryContrastingColor: primaryColorDark ?? primaryColor!,
-        //textTheme: primaryTextTheme ?? textTheme,
+        textTheme: primaryTextTheme ?? textTheme,
         applyThemeToAll: applyThemeToAll,
+      );
+    } else if (Design.isMacOS()) {
+      return macos.MacosThemeData(
+        scrollbarTheme: scrollbarTheme,
+        visualDensity: visualDensity,
+        brightness: brightness,
+        canvasColor: canvasColor,
+        dividerColor: dividerColor,
+        primaryColor: primaryColor,
+        iconTheme: iconTheme,
+        typography: typography,
+        datePickerTheme: datePickerTheme,
+        timePickerTheme: timePickerTheme,
+        tooltipTheme: tooltipTheme,
+      );
+    } else if (Design.isFluent()) {
+      return fluent.FluentThemeData(
+        extensions: extensions,
+        scrollbarTheme: scrollbarTheme,
+        visualDensity: visualDensity,
+        brightness: brightness,
+        cardColor: cardColor,
+        shadowColor: shadowColor,
+        fontFamily: fontFamily,
+        iconTheme: iconTheme,
+        typography: typography,
+        buttonTheme: buttonTheme,
+        checkboxTheme: checkboxTheme,
+        dialogTheme: dialogTheme,
+        dividerTheme: dividerTheme,
+        sliderTheme: sliderTheme,
+        tooltipTheme: tooltipTheme,
       );
     }
   }

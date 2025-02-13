@@ -19,10 +19,16 @@ abstract class NativeStatefulWidget extends StatefulWidget implements NativeWidg
 }
 
 /// for custom implementations of Widget
-abstract class NativeWidget<T extends Widget> {
+abstract class NativeWidget extends Native {
+  /// constructor
+  const NativeWidget(super.type);
+}
+
+/// base class for all Native uses
+abstract class Native {
   /// Material equivalent
   final Type type;
 
   /// constructor
-  const NativeWidget(this.type);
+  const Native(this.type);
 }

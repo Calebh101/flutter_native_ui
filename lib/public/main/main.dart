@@ -488,8 +488,8 @@ class NativeApp extends NativeStatelessWidget {
         title: title ?? '',
         onGenerateTitle: onGenerateTitle,
         color: color,
-        //theme: theme,
-        //darkTheme: darkTheme,
+        theme: (highContrast ? highContrastTheme?.build() : theme?.build()) ?? ThemeData.fallback(),
+        darkTheme: (highContrast ? highContrastDarkTheme?.build() : darkTheme?.build()) ?? ThemeData.fallback(),
         locale: locale,
         localizationsDelegates: localizationsDelegates,
         localeListResolutionCallback: localeListResolutionCallback,
@@ -561,7 +561,6 @@ class NativeScaffold extends NativeStatefulWidget {
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
   final String? restorationId;
-  final TextDirection? textDirection;
 
   const NativeScaffold({
     super.key,
@@ -590,7 +589,6 @@ class NativeScaffold extends NativeStatefulWidget {
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
-    this.textDirection,
   });
 
   @override
@@ -657,14 +655,10 @@ class _NativeScaffoldState extends State<NativeScaffold> {
         child: widget.body,
       );
     } else if (Design.isFluent()) {
-      Widget data = fluent.NavigationPaneTheme(
+      return fluent.NavigationPaneTheme(
         data: fluent.NavigationPaneThemeData(),
         child: widget.body,
       );
-      return widget.textDirection != null ? Directionality(
-        textDirection: widget.textDirection!,
-        child: data,
-      ) : data;
     } else {
       return handler.overflow();
     }

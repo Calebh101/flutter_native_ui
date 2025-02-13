@@ -44,7 +44,8 @@ class UnimplementedApp extends StatelessWidget {
             children: [
               NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 36),
               NativeText("Running: UNIMPLEMENTED\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
-              fluent.Text("Test font: ${style.fontFamily}", style: style),
+              Text("Test font: ${style.fontFamily}", style: style),
+              fluent.Text("Test text"),
               NativeCircularProgressIndicator(),
             ],
           ),
@@ -72,6 +73,7 @@ class _TestPageState extends State<TestPage> {
             NativeIcon(NativeIconData(icon: Icons.add, cupertinoIcon: CupertinoIcons.add, fluentIcon: fluent.FluentIcons.add, yaruIcon: yaru.YaruIcons.plus), size: 72),
             NativeText("Running: TESTPAGE\nCurrent platform: ${flutterNative.platform}\nFont: ${getFont()}"),
             Text("Test font: ${style.fontFamily}", style: style),
+            fluent.Text("Test text"),
             NativeCircularProgressIndicator(),
           ],
         ),
