@@ -34,7 +34,7 @@ void main({String className = "Text", int mode = 0}) {
     }
   }
 
-  print("\nLoading...");
+  print("\nStarting generation");
   String extender = "Native";
 
   switch (mode) {
@@ -53,23 +53,31 @@ void main({String className = "Text", int mode = 0}) {
   String loading = "Loading...";
   String dir = "${Directory.current.path}/creator";
   String text = File('$dir/input.txt').readAsStringSync();
-  RegExp regExp = RegExp(r'\b[\w.?]+\b');
+  RegExp regExp = RegExp(r"[a-zA-Z0-9_?.]+");
   List fields = [];
+  int i = 0;
+  String name = "Native$className";
 
-  for (var line in text.split('\n')) {
+  print('Generating class $name with $extender');
+  for (var line in text.replaceAll('\n', '').split(',')) {
     Iterable<Match> matches = regExp.allMatches(line);
     List<String> words = matches.map((m) => m.group(0)!).toList();
 
-    fields.add({
+    if (i == 0) {
+      words.remove(className);
+    }
+
+    Map value = {
       "name": words[1],
       "type": words[0],
       "value": words.length >= 3 ? words[2] : null,
       "final": true,
-    });
-  }
+    };
 
-  String name = "Native$className";
-  print('Generating class $name with $extender');
+    fields.add(value);
+    print("${value["final"] ? "final" : "variable"} ${value["type"]} ${value["name"]} = ${value["value"]}");
+    i++;
+  }
 
   List constructor = [];
   String result = loading;

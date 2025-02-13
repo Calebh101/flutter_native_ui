@@ -24,7 +24,7 @@ Future<void> main() async {
     }
 
     if (repeat == false) {
-      print("Process complete");
+      print("Tool complete");
       break;
     }
   }
