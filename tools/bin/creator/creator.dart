@@ -51,7 +51,7 @@ void main({String className = "Text", int mode = 0}) {
 
   String tab = "  ";
   String loading = "Loading...";
-  String dir = "${Directory.current.path}/creator";
+  String dir = File.fromUri(Platform.script).parent.path;
   String text = File('$dir/input.txt').readAsStringSync();
   RegExp regExp = RegExp(r"[a-zA-Z0-9_?.]+");
   List fields = [];
@@ -80,6 +80,8 @@ void main({String className = "Text", int mode = 0}) {
   }
 
   List constructor = [];
+  List arguments = [];
+
   String result = loading;
   String declarations = loading;
 
@@ -92,7 +94,9 @@ void main({String className = "Text", int mode = 0}) {
     if (name != "key") {
       declarations = "${declarations == loading ? "" : "$declarations\n"}$tab${finalS ? "final " : ""}$type $name;";
     }
+
     constructor.add("this.$name${value != "" && value != null ? " = $value" : ""}");
+    arguments.add("$name: $name");
   }
 
 
@@ -104,10 +108,10 @@ ${tab}const $name({super.key, super.type = $className, ${constructor.join(', ')}
 $declarations
 
 ${tab}@override
-${tab}State<$name> createState() => _${name}State();
+${tab}NativeState<$name> createState() => _${name}State();
 }
 
-class _${name}State extends State<$name> {
+class _${name}State extends NativeState<$name> {
 ${tab}@override
 ${tab}Widget build(BuildContext context) {
 ${tab}${tab}return;
@@ -131,13 +135,22 @@ ${tab}/// Constructor for $name
 ${tab}const $name({super.type = $className, ${constructor.join(', ')}});
 
 $declarations
+
+${tab}@override
+${tab}dynamic build(BuildContext context) {
+${tab}${tab}return;
+${tab}}
 }''';
   } else {
     result = 'Error: unknown mode';
   }
 
-  String output = "$dir/output.txt";
+  String example = '''$className(
+${tab}${arguments.join(',\n$tab')}
+)''';
+
+  String output = "$dir/class.txt";
   print("Overwriting output file at $output");
-  File(output).writeAsString(result);
+  File(output).writeAsString("$result\n\n$example");
   print("Process complete");
 }

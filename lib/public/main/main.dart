@@ -8,8 +8,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/private.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
-import 'package:macos_ui/macos_ui.dart' as macos;
-import 'package:yaru/yaru.dart' as yaru;
+import 'package:macos_ui/macos_ui.dart';
+import 'package:yaru/yaru.dart';
 
 FlutterNativeUI? _currentInstance;
 
@@ -429,7 +429,7 @@ class NativeApp extends NativeStatelessWidget {
       handler.handle('debugShowMaterialGrid', debugShowMaterialGrid);
       handler.handle('themeAnimationStyle', themeAnimationStyle);
 
-      return macos.MacosApp(
+      return MacosApp(
         key: key,
         themeMode: themeMode,
         navigatorKey: navigatorKey,
@@ -444,8 +444,8 @@ class NativeApp extends NativeStatelessWidget {
         title: title ?? '',
         onGenerateTitle: onGenerateTitle,
         color: color,
-        theme: (highContrast ? highContrastTheme?.build() : theme?.build()) ?? macos.MacosThemeData.fallback(),
-        darkTheme: (highContrast ? highContrastDarkTheme?.build() : darkTheme?.build()) ?? macos.MacosThemeData.fallback(),
+        theme: (highContrast ? highContrastTheme?.build() : theme?.build()) ?? MacosThemeData.fallback(),
+        darkTheme: (highContrast ? highContrastDarkTheme?.build() : darkTheme?.build()) ?? MacosThemeData.fallback(),
         locale: locale,
         localizationsDelegates: localizationsDelegates,
         localeListResolutionCallback: localeListResolutionCallback,
@@ -459,16 +459,16 @@ class NativeApp extends NativeStatelessWidget {
         shortcuts: shortcuts?.map((key, value) => MapEntry(key is SingleActivator ? LogicalKeySet(key.trigger) : null, value)).cast<LogicalKeySet, Intent>(),
         actions: actions,
         restorationScopeId: restorationScopeId,
-        scrollBehavior: scrollBehavior ?? const macos.MacosScrollBehavior(),
+        scrollBehavior: scrollBehavior ?? const MacosScrollBehavior(),
       );
     } else if (Design.isYaru()) {
-        return yaru.YaruTheme(
+        return YaruTheme(
           key: key,
-          builder: (context, yaruS, child) {
-            ThemeData themeS = theme?.build() ?? yaruS.theme;
-            ThemeData darkThemeS = darkTheme?.build() ?? yaruS.darkTheme;
-            ThemeData highContrastThemeS = highContrastTheme?.build() ?? yaru.yaruHighContrastLight;
-            ThemeData highContrastDarkThemeS = highContrastDarkTheme?.build() ?? yaruS.yaru.yaruHighContrastDark;
+          builder: (context, yaru, child) {
+            ThemeData themeS = theme?.build() ?? yaru.theme;
+            ThemeData darkThemeS = darkTheme?.build() ?? yaru.darkTheme;
+            ThemeData highContrastThemeS = highContrastTheme?.build() ?? yaruHighContrastLight;
+            ThemeData highContrastDarkThemeS = highContrastDarkTheme?.build() ?? yaruHighContrastDark;
             return _buildMaterialApp(theme: themeS, darkTheme: darkThemeS, highContrastTheme: highContrastThemeS, highContrastDarkTheme: highContrastDarkThemeS);
           },
         );
@@ -509,18 +509,14 @@ class NativeApp extends NativeStatelessWidget {
   }
 }
 
-extension on yaru.YaruThemeData {
-  get yaru => null;
-}
-
 class NativeAppBar extends NativeStatefulWidget {
   const NativeAppBar({super.key, super.type = AppBar});
 
   @override
-  State<NativeAppBar> createState() => _NativeAppBarState();
+  NativeState<NativeAppBar> createState() => _NativeAppBarState();
 }
 
-class _NativeAppBarState extends State<NativeAppBar> {
+class _NativeAppBarState extends NativeState<NativeAppBar> {
   @override
   Widget build(BuildContext context) {
     return Placeholder();
@@ -595,7 +591,7 @@ class NativeScaffold extends NativeStatefulWidget {
   _NativeScaffoldState createState() => _NativeScaffoldState();
 }
 
-class _NativeScaffoldState extends State<NativeScaffold> {
+class _NativeScaffoldState extends NativeState<NativeScaffold> {
   @override
   Widget build(BuildContext context) {
     NativeHandler handler = NativeHandler(name: 'NativeScaffold');

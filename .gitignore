@@ -31,4 +31,5 @@ migrate_working_dir/
 build/
 
 tools/creator/input.txt
-tools/creator/output.txt
+tools/creator/class.txt
+tools/creator/build.txt

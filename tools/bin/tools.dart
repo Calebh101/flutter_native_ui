@@ -34,6 +34,6 @@ Future<void> main() async {
 }
 
 Future<void> run(String script) async {
-  Process process = await Process.start('dart', [script], mode: ProcessStartMode.inheritStdio);
+  Process process = await Process.start('dart', ['run', '${File.fromUri(Platform.script).parent.path}/$script'], mode: ProcessStartMode.inheritStdio);
   await process.exitCode;
 }

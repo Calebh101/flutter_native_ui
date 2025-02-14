@@ -66,11 +66,6 @@ class NativeIcon extends NativeStatelessWidget {
       blendMode: blendMode,
     );
   }
-
-  @override
-  Widget transform(BuildContext context, Widget input) {
-    throw Exception("Type ${super.type} cannot be transformed (from type ${input.runtimeType})");
-  }
 }
 
 /// For generating IconData to be used with NativeIcon. This is recommended to only be used with NativeIcon, and if used with anything else (this only applies to macOS), then it will not look correct.

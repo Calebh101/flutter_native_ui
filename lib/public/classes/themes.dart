@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_ui/flutter_native_ui.dart';
 import 'package:flutter_native_ui/private.dart';
-import 'package:macos_ui/macos_ui.dart' as macos;
+import 'package:macos_ui/macos_ui.dart';
 
 /// Allows you to create theme data based on the platform:
 /// 
@@ -50,8 +50,8 @@ class NativeThemeData {
   final String? package;
   final IconThemeData? iconTheme;
   final IconThemeData? primaryIconTheme;
-  final TextTheme? primaryTextTheme;
-  final TextTheme? textTheme;
+  final NativeTextTheme? primaryTextTheme;
+  final NativeTextTheme? textTheme;
   final Typography? typography;
   final ActionIconThemeData? actionIconTheme;
   final AppBarTheme? appBarTheme;
@@ -234,8 +234,8 @@ class NativeThemeData {
         package: package,
         iconTheme: iconTheme,
         primaryIconTheme: primaryIconTheme,
-        primaryTextTheme: primaryTextTheme,
-        textTheme: textTheme,
+        primaryTextTheme: primaryTextTheme?.build(context),
+        textTheme: textTheme?.build(context),
         typography: typography,
         actionIconTheme: actionIconTheme,
         appBarTheme: appBarTheme,
@@ -289,11 +289,11 @@ class NativeThemeData {
         brightness: brightness,
         primaryColor: primaryColor,
         primaryContrastingColor: primaryColorDark ?? primaryColor!,
-        textTheme: primaryTextTheme ?? textTheme,
+        textTheme: (primaryTextTheme ?? textTheme)?.build(context),
         applyThemeToAll: applyThemeToAll,
       );
     } else if (Design.isMacOS()) {
-      return macos.MacosThemeData(
+      return MacosThemeData(
         scrollbarTheme: scrollbarTheme,
         visualDensity: visualDensity,
         brightness: brightness,
@@ -327,3 +327,88 @@ class NativeThemeData {
     }
   }
 }
+
+class NativeTextTheme extends Native {
+  /// Constructor for NativeTextTheme
+  const NativeTextTheme({super.type = TextTheme, this.displayLarge, this.displayMedium, this.displaySmall, this.headlineLarge, this.headlineMedium, this.headlineSmall, this.titleLarge, this.titleMedium, this.titleSmall, this.bodyLarge, this.bodyMedium, this.bodySmall, this.labelLarge, this.labelMedium, this.labelSmall, this.color = Colors.red, this.bodyStrong});
+
+  final TextStyle? displayLarge;
+  final TextStyle? displayMedium;
+  final TextStyle? displaySmall;
+  final TextStyle? headlineLarge;
+  final TextStyle? headlineMedium;
+  final TextStyle? headlineSmall;
+  final TextStyle? titleLarge;
+  final TextStyle? titleMedium;
+  final TextStyle? titleSmall;
+  final TextStyle? bodyLarge;
+  final TextStyle? bodyMedium;
+  final TextStyle? bodySmall;
+  final TextStyle? bodyStrong;
+  final TextStyle? labelLarge;
+  final TextStyle? labelMedium;
+  final TextStyle? labelSmall;
+  final Color color;
+
+  @override
+  dynamic build(BuildContext context) {
+    if (Design.isMaterialYaru()) {
+      return TextTheme(
+        displayLarge: displayLarge,
+        displayMedium: displayMedium,
+        displaySmall: displaySmall,
+        headlineLarge: headlineLarge,
+        headlineMedium: headlineMedium,
+        headlineSmall: headlineSmall,
+        titleLarge: titleLarge,
+        titleMedium: titleMedium,
+        titleSmall: titleSmall,
+        bodyLarge: bodyLarge,
+        bodyMedium: bodyMedium,
+        bodySmall: bodySmall,
+        labelLarge: labelLarge,
+        labelMedium: labelMedium,
+        labelSmall: labelSmall
+      );
+    } else if (Design.isCupertino()) {
+      return CupertinoTextThemeData(
+        primaryColor: color,
+        textStyle: bodyMedium,
+        actionTextStyle: labelLarge,
+        tabLabelTextStyle: labelMedium,
+        navTitleTextStyle: titleMedium,
+        navLargeTitleTextStyle: titleLarge,
+        pickerTextStyle: bodyLarge,
+        dateTimePickerTextStyle: bodySmall,
+      );
+    }
+  }
+}
+
+else if (Design.isFluent()) {
+      return fluent.Typography.raw(
+        display: displayMedium,
+        titleLarge: titleLarge,
+        title: titleMedium,
+        subtitle: titleSmall,
+        bodyLarge: bodyLarge,
+        bodyStrong: bodyStrong,
+        body: bodyMedium,
+        caption: labelMedium,
+      );
+    } else if (Design.isMacOS()) {
+      return MacosTypography(
+        color: color,
+        largeTitle: displayLarge,
+        title1: displayLarge,
+        title2: displayMedium,
+        title3: displaySmall,
+        headline: headlineLarge,
+        subheadline: headlineMedium,
+        callout: headlineSmall,
+        body: bodyLarge,
+        footnote: bodyMedium,
+        caption1: bodySmall,
+        caption2: labelLarge,
+      );
+    }
