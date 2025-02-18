@@ -7,6 +7,7 @@ Future<void> main() async {
   while (true) {
     print("\nSelect an action:");
     print("1. creator");
+    print("2. fetch");
     print("0. exit");
 
     stdout.write("\n>> ");
@@ -14,10 +15,10 @@ Future<void> main() async {
 
     switch (input) {
       case '1':
-        await run('creator/creator.dart');
+        await run('creator/creator.dart', mode: 1);
         break;
       case '2':
-        await run('creator/builder.dart');
+        await run('fetch/fetch.js', mode: 2);
         break;
       case '0' || 'exit' || 'quit' || 'e' || 'q':
         print("Exiting...");
@@ -33,7 +34,12 @@ Future<void> main() async {
   }
 }
 
-Future<void> run(String script) async {
-  Process process = await Process.start('dart', [script], mode: ProcessStartMode.inheritStdio);
+Future<void> run(String script, {int mode = 1}) async {
+  List<String> args = ['${File.fromUri(Platform.script).parent.path}/$script'];
+  if (mode == 1) {
+    args.insert(0, 'run');
+  }
+
+  Process process = await Process.start(mode == 1 ? 'dart' : 'node', args, mode: ProcessStartMode.inheritStdio);
   await process.exitCode;
 }

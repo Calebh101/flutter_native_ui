@@ -52,7 +52,7 @@ class NativeThemeData {
   final IconThemeData? primaryIconTheme;
   final NativeTextTheme? primaryTextTheme;
   final NativeTextTheme? textTheme;
-  final Typography? typography;
+  final NativeTypography? typography;
   final ActionIconThemeData? actionIconTheme;
   final AppBarTheme? appBarTheme;
   final BadgeThemeData? badgeTheme;
@@ -236,7 +236,7 @@ class NativeThemeData {
         primaryIconTheme: primaryIconTheme,
         primaryTextTheme: primaryTextTheme?.build(context),
         textTheme: textTheme?.build(context),
-        typography: typography,
+        typography: typography?.build(context),
         actionIconTheme: actionIconTheme,
         appBarTheme: appBarTheme,
         badgeTheme: badgeTheme,
@@ -301,7 +301,7 @@ class NativeThemeData {
         dividerColor: dividerColor,
         primaryColor: primaryColor,
         iconTheme: iconTheme,
-        typography: typography,
+        typography: typography?.build(context),
         datePickerTheme: datePickerTheme,
         timePickerTheme: timePickerTheme,
         tooltipTheme: tooltipTheme,
@@ -316,7 +316,7 @@ class NativeThemeData {
         shadowColor: shadowColor,
         fontFamily: fontFamily,
         iconTheme: iconTheme,
-        typography: typography,
+        typography: typography?.build(context),
         buttonTheme: buttonTheme,
         checkboxTheme: checkboxTheme,
         dialogTheme: dialogTheme,
@@ -352,7 +352,7 @@ class NativeTextTheme extends Native {
 
   @override
   dynamic build(BuildContext context) {
-    if (Design.isMaterialYaru()) {
+    if (Design.isMaterialYaru() || Design.isFluent() || Design.isMacOS()) {
       return TextTheme(
         displayLarge: displayLarge,
         displayMedium: displayMedium,
@@ -385,7 +385,47 @@ class NativeTextTheme extends Native {
   }
 }
 
-else if (Design.isFluent()) {
+class NativeTypography extends Native {
+  /// Constructor for NativeTypography
+  const NativeTypography({super.type = Typography, this.platform, this.black, this.white, this.englishLike, this.dense, this.tall, this.displayLarge, this.displayMedium, this.displaySmall, this.headlineLarge, this.headlineMedium, this.headlineSmall, this.titleLarge, this.titleMedium, this.titleSmall, this.bodyLarge, this.bodyMedium, this.bodySmall, this.labelLarge, this.labelMedium, this.labelSmall, this.color = Colors.red, this.bodyStrong});
+
+  final TargetPlatform? platform;
+  final TextTheme? black;
+  final TextTheme? white;
+  final TextTheme? englishLike;
+  final TextTheme? dense;
+  final TextTheme? tall;
+
+  final TextStyle? displayLarge;
+  final TextStyle? displayMedium;
+  final TextStyle? displaySmall;
+  final TextStyle? headlineLarge;
+  final TextStyle? headlineMedium;
+  final TextStyle? headlineSmall;
+  final TextStyle? titleLarge;
+  final TextStyle? titleMedium;
+  final TextStyle? titleSmall;
+  final TextStyle? bodyLarge;
+  final TextStyle? bodyMedium;
+  final TextStyle? bodySmall;
+  final TextStyle? bodyStrong;
+  final TextStyle? labelLarge;
+  final TextStyle? labelMedium;
+  final TextStyle? labelSmall;
+  final Color color;
+
+  @override
+  dynamic build(BuildContext context) {
+    if (Design.isMaterialYaru() || Design.isCupertino()) {
+      Typography(
+        platform: platform,
+        black: black,
+        white: white,
+        englishLike: englishLike,
+        dense: dense,
+        tall: tall,
+      );
+    } else if (Design.isFluent()) {
       return fluent.Typography.raw(
         display: displayMedium,
         titleLarge: titleLarge,
@@ -412,3 +452,6 @@ else if (Design.isFluent()) {
         caption2: labelLarge,
       );
     }
+  }
+}
+
