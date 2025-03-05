@@ -1,7 +1,7 @@
 name: flutter_native_ui
-description: "A Flutter package to make your app look fluent on all platforms."
-version: 0.0.0+1
-#homepage: "https://calebh101.com/apps/flutter_native_ui"
+description: "A Flutter package to make your app look native on all platforms."
+version: 0.0.0-dev1
+homepage: "https://calebh101.com/applications/flutter_native_ui"
 repository: "https://github.com/Calebh101/flutter_native_ui"
 
 environment:
